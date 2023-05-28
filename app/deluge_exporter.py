@@ -277,6 +277,6 @@ class DelugeCollector(object):
 
 if __name__ == '__main__':
   REGISTRY.register(DelugeCollector())
-  start_http_server(9354)
+  start_http_server(int(os.environ.get('METRICS_PORT', '9354')))
   while True:
     time.sleep(60)
