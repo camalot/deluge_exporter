@@ -247,6 +247,8 @@ class DelugeMetricsCollector(object):
       self.config.deluge['rpcPassword'], 
     )
 
+    return
+
     client.connect()
 
     libtorrent_status_metrics = self.get_libtorrent_status_metrics_meta()
