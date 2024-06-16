@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:alpine-3.11
 
 ARG BUILD_VERSION="1.0.0-snapshot"
 ARG PROJECT_NAME=
