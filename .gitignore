@@ -3,7 +3,7 @@
 .venv/**
 .deluge/**
 setup/install.*
-metrics/sample.json
+sample.json
 
 \.idea/
 __pycache__/**
