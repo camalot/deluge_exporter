@@ -12,9 +12,12 @@ ENV APP_BUILD_REF=${BUILD_REF}
 ENV APP_BUILD_SHA=${BUILD_SHA}
 
 
-ENV DELUGE_HOST="localhost"
-ENV METRICS_PORT="9354"
-ENV DELUGE_CONFIG_DIR="/config"
+ENV DE_DELUGE_HOST="localhost"
+ENV DE_METRICS_PORT="9354"
+ENV DE_DELUGE_CONFIG_PATH="/config"
+ENV DE_LOG_LEVEL=WARNING
+ENV DE_CONFIG_METRICS_ENABLED=true
+ENV DE_METRICS_CONFIG_PATH="/app/metrics.yaml"
 
 LABEL VERSION="${BUILD_VERSION}"
 LABEL PROJECT_NAME="${PROJECT_NAME}"
@@ -29,4 +32,4 @@ RUN rm -rf /var/cache/apk/* && \
     rm -rf /app/setup
 
 EXPOSE 9354
-ENTRYPOINT ["/usr/local/bin/python", "/app/deluge_exporter.py"]
+ENTRYPOINT ["/usr/local/bin/python", "/app/main.py"]
