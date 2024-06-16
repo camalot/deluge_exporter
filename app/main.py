@@ -23,7 +23,9 @@ def exporter():
     try:
         EXPORTER_ENABLED = os.environ.get("DE_CONFIG_METRICS_ENABLED", "false").lower() == "true"
         if EXPORTER_ENABLED:
+            print("Metrics exporter enabled")
             exporter = MetricsExporter()
+            print("Running exporter")
             exporter.run()
         else:
             print(Colors.colorize(Colors.FGYELLOW, "<Metrics exporter disabled>"))
@@ -32,6 +34,7 @@ def exporter():
         exit(0)
 
 if __name__ == '__main__':
+    print("STARTING")
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:

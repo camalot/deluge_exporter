@@ -26,9 +26,12 @@ class MetricsExporter():
         _method = inspect.stack()[1][3]
         try:
             config_file = utils.dict_get(os.environ, "DE_METRICS_CONFIG_FILE", "/app/config.yml")
+            print("config_file:", config_file)
             config = DelugeMetricsConfig(config_file)
+            print(config)
             collector = DelugeMetricsCollector(config)
             REGISTRY.register(collector)
+            print("start http server")
             start_http_server(config.metrics["port"])
             self.log.info(
                 f"{self._module}.{self._class}.{_method}",
