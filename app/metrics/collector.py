@@ -246,6 +246,7 @@ class DelugeMetricsCollector(object):
       self.config.deluge['rpcUser'],
       self.config.deluge['rpcPassword'], 
     )
+
     client.connect()
 
     libtorrent_status_metrics = self.get_libtorrent_status_metrics_meta()
@@ -264,7 +265,7 @@ class DelugeMetricsCollector(object):
           yield props['type'](f'{self.namespace}_libtorrent_{metric}', props['help'], value=0)
           self.log.info(
             f"{self._module}.{self._class}.{_method}",
-            f"metric '{metric}' not found in libtorrent_status_metric_values",
+            f"metric '{metric}' not found in libtorrent_status_metric_values. Setting value to 0.",
           )
 
     yield self.new_metric_with_labels_and_value(GaugeMetricFamily, f'{self.namespace}_info', 'Deluge information',

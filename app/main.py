@@ -31,17 +31,32 @@ def exporter():
         print(Colors.colorize(Colors.FGYELLOW, "<KeyboardInterrupt received>"))
         exit(0)
 
-
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     try:
         signal.signal(signal.SIGTERM, sighandler)
         signal.signal(signal.SIGINT, sighandler)
-
         executor = ProcessPoolExecutor(2)
         loop.run_in_executor(executor, exporter)
         loop.run_forever()
+
+        # asyncio.run(amain(loop=loop))
     except KeyboardInterrupt:
         pass
     finally:
         loop.close()
+
+# if __name__ == '__main__':
+#     loop = asyncio.get_event_loop()
+#     try:
+#         signal.signal(signal.SIGTERM, sighandler)
+#         signal.signal(signal.SIGINT, sighandler)
+
+#         executor = ProcessPoolExecutor(2)
+#         loop.run_in_executor(executor, exporter)
+#         loop.run_forever()
+#     except KeyboardInterrupt:
+#         pass
+#     finally:
+#         loop.close()
