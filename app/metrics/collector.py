@@ -27,6 +27,8 @@ class DelugeMetricsCollector(object):
     if not log_level:
       log_level = LogLevel.DEBUG
     self.log = Log(log_level)
+    print({json.dumps({k: v for k, v in self.config.deluge.items() if k != 'rpcPassword'}, indent=2)})
+
 
 
   def get_libtorrent_status_metrics_meta(self):
