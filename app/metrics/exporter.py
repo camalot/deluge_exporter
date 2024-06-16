@@ -34,6 +34,6 @@ class MetricsExporter():
                 f"{self._module}.{self._class}.{_method}",
                 f"Exporter Starting Listen => :{config.metrics['port']}/metrics",
             )
-            collector.run_metrics_loop()
+            collector.run()
         except Exception as ex:
             self.log.error(f"{self._module}.{self._class}.{_method}", str(ex), traceback.format_exc())

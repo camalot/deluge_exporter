@@ -217,7 +217,7 @@ class DelugeMetricsCollector(object):
     return m
 
 
-  def run_metrics_loop(self):
+  def run(self):
     """Metrics fetching loop"""
     _method = inspect.stack()[0][3]
     while True:
