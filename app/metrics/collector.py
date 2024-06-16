@@ -235,6 +235,11 @@ class DelugeMetricsCollector(object):
 
   def collect(self):
     _method = inspect.stack()[0][3]
+
+    self.log.debug(f"{self._module}.{self._class}.{_method}", f"Begin collecting metrics")
+    self.log.debug(f"{self._module}.{self._class}.{_method}", f"Connecting to deluge rpc server")
+    self.log.debug(f"{self._module}.{self._class}.{_method}", f"{json.dumps({k: v for k, v in self.config.deluge.items() if k != 'rpcPassword'}, indent=2)}")
+
     client = DelugeRPCClient(
       self.config.deluge['host'],
       self.config.deluge['rpcPort'],
