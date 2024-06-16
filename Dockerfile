@@ -20,6 +20,7 @@ LABEL VERSION="${BUILD_VERSION}"
 LABEL PROJECT_NAME="${PROJECT_NAME}"
 
 COPY app/ /app
+COPY setup/ /app/setup
 
 RUN pip install -r /app/setup/requirements.txt
 

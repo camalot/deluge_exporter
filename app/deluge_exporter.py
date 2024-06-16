@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+from dotenv import find_dotenv, load_dotenv
+load_dotenv(find_dotenv())
 
 import json
 import os
-import pwd
 import time
 
 from collections import defaultdict
@@ -204,7 +205,7 @@ def new_metric_with_labels_and_value(metric, name, documentation, labels, value)
 
 class DelugeCollector(object):
   def __init__(self):
-    deluge_config_dir = os.environ.get('DELUGE_CONFIG_DIR', os.path.join(pwd.getpwuid(os.getuid()).pw_dir, '.config', 'deluge'))
+    deluge_config_dir = os.environ.get('DE_DELUGE_CONFIG_DIR', '/config')
     print(f"deluge_config_dir: {deluge_config_dir}")
     with open(os.path.join(deluge_config_dir, 'core.conf')) as f:
       while f.read(1) != '}':
@@ -214,11 +215,10 @@ class DelugeCollector(object):
       self.rpc_user, self.rpc_password = f.readline().strip().split(':')[:2]
 
     print(f"rpc_port: {self.rpc_port}")
-    print(f"rpc_user: {self.rpc_user}")
-    print(f"rpc_password: {self.rpc_password}")
 
   def collect(self):
-    deluge_host = os.environ.get('DELUGE_HOST', '127.0.0.1')
+    deluge_host = os.environ.get('DE_DELUGE_HOST', '127.0.0.1')
+    print(f"deluge_host: {deluge_host}")
     client = DelugeRPCClient(deluge_host, self.rpc_port, self.rpc_user, self.rpc_password)
     client.connect()
 
@@ -228,10 +228,15 @@ class DelugeCollector(object):
     libtorrent_status_metric_values = client.call('core.get_session_status', libtorrent_status_metric_source_names)
 
     for metric, props in libtorrent_status_metrics.items():
-      value = libtorrent_status_metric_values[props['source']]
-      if 'conv' in props:
-        value = props['conv'](value)
-      yield props['type']('deluge_libtorrent_{}'.format(metric), props['help'], value=value)
+      # print(f"metric: {metric}, props: {props}")
+      if libtorrent_status_metric_values:
+        if props['source'] in libtorrent_status_metric_values:
+          value = libtorrent_status_metric_values[props['source']]
+          if 'conv' in props:
+            value = props['conv'](value)
+          yield props['type']('deluge_libtorrent_{}'.format(metric), props['help'], value=value)
+        else:
+          print(f"metric {metric} not found in libtorrent_status_metric_values")
 
     yield new_metric_with_labels_and_value(GaugeMetricFamily, 'deluge_info', 'Deluge information',
       labels={
@@ -282,6 +287,6 @@ class DelugeCollector(object):
 
 if __name__ == '__main__':
   REGISTRY.register(DelugeCollector())
-  start_http_server(int(os.environ.get('METRICS_PORT', '9354')))
+  start_http_server(int(os.environ.get('DE_METRICS_PORT', '9354')))
   while True:
     time.sleep(60)
